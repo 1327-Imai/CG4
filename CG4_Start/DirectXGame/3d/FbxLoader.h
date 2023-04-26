@@ -1,6 +1,7 @@
 ﻿#pragma once
 
 #include "fbxsdk.h"
+#include "model.h"
 #include <string>
 
 #include <d3d12.h>
@@ -39,6 +40,8 @@ public:
 	/// </summary>
 	/// <param name="modelName"></param>
 	void LoadModelFromFile(const string& modelName);
+
+	void ParseNodeRecursive(Model* model , FbxNode* fbxNode,Model::Node* parent = nullptr);
 
 private://メンバ変数
 	//デバイス
