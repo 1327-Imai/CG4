@@ -84,6 +84,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
       <AdditionalDependencies>libfbxsdk-mt.lib;libxml2-mt.lib;zlib-mt.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalOptions>/IGNORE:4099 %(AdditionalOptions)</AdditionalOptions>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -120,6 +121,7 @@
     <ClInclude Include="3d\PointLight.h" />
     <ClInclude Include="3d\SpotLight.h" />
     <ClInclude Include="audio\Audio.h" />
+    <ClInclude Include="base\SafeDelete.h" />
     <ClInclude Include="camera\Camera.h" />
     <ClInclude Include="camera\DebugCamera.h" />
     <ClInclude Include="2d\DebugText.h" />
@@ -127,7 +129,6 @@
     <ClInclude Include="Model.h" />
     <ClInclude Include="scene\GameScene.h" />
     <ClInclude Include="input\Input.h" />
-    <ClInclude Include="SafeDelete.h" />
     <ClInclude Include="base\WinApp.h" />
   </ItemGroup>
   <ItemGroup>
