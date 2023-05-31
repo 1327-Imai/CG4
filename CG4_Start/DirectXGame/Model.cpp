@@ -1,19 +1,35 @@
 #include "Model.h"
 
-void Model::CreateBuffers(ID3D12Device* device) {
+void Model::CreateBuffers(ID3D12Device* device)
+{
+
+	//頂点データ全体のサイズ = 頂点データ一つ分のサイズ * 頂点データの要素数
+	UINT sizeVB = static_cast<UINT>(sizeof(vertices[0]) * vertices.size());
 
 	HRESULT result;
-	//頂点データのサイズ
-	UINT sizeVB = static_cast<UINT>(sizeof(VertecxPosNormalUv) * vertices.size());
+	//頂点バッファの設定
+	D3D12_HEAP_PROPERTIES heapProp{};
+	heapProp.Type = D3D12_HEAP_TYPE_UPLOAD;
+
+	D3D12_RESOURCE_DESC resDesc{};
+	resDesc.Dimension = D3D12_RESOURCE_DIMENSION_BUFFER;
+	resDesc.Width = sizeVB;
+	resDesc.Height = 1;
+	resDesc.DepthOrArraySize = 1;
+	resDesc.MipLevels = 1;
+	resDesc.SampleDesc.Count = 1;
+	resDesc.Layout = D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
 
 	result = device->CreateCommittedResource(
-		&CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD) ,
+		&heapProp ,
 		D3D12_HEAP_FLAG_NONE ,
-		&CD3DX12_RESOURCE_DESC::Buffer(sizeVB) ,
+		&resDesc ,
 		D3D12_RESOURCE_STATE_GENERIC_READ ,
 		nullptr ,
 		IID_PPV_ARGS(&vertBuff)
 	);
+
+	assert(SUCCEEDED(result));
 
 	//頂点バッファへ転送
 	VertecxPosNormalUv* vertMap = nullptr;
@@ -50,7 +66,7 @@ void Model::CreateBuffers(ID3D12Device* device) {
 
 	//IBVの作成
 	ibView.BufferLocation = indexBuff->GetGPUVirtualAddress();
-	ibView.Format = DXGI_FORMAT_R16G16_UINT;
+	ibView.Format = DXGI_FORMAT_R16_UINT;
 	ibView.SizeInBytes = sizeIB;
 
 	const DirectX::Image* img = scratchImg.GetImage(0 , 0 , 0);
@@ -84,7 +100,7 @@ void Model::CreateBuffers(ID3D12Device* device) {
 		(UINT)img->slicePitch
 	);
 
-	//SRv用デスクリプタヒープを生成
+	//SRV用デスクリプタヒープを生成
 	D3D12_DESCRIPTOR_HEAP_DESC descHeapdesc = {};
 	descHeapdesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
 	descHeapdesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
@@ -93,9 +109,9 @@ void Model::CreateBuffers(ID3D12Device* device) {
 
 	//SRVの作成
 	D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc{};
-	D3D12_RESOURCE_DESC resDesc = texBuff->GetDesc();
+	D3D12_RESOURCE_DESC texResDesc = texBuff->GetDesc();
 
-	srvDesc.Format = resDesc.Format;
+	srvDesc.Format = texResDesc.Format;
 	srvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
 	srvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
 	srvDesc.Texture2D.MipLevels = 1;
