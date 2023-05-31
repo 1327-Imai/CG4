@@ -89,7 +89,7 @@ void Model::CreateBuffers(ID3D12Device* device) {
 	descHeapdesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
 	descHeapdesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
 	descHeapdesc.NumDescriptors = 1;
-	result = device->CreateDescriptorHeap(&descHeapdesc , IID_PPV_ARGS(&descHeapSrv);
+	result = device->CreateDescriptorHeap(&descHeapdesc , IID_PPV_ARGS(&descHeapSrv));
 
 	//SRV�̍쐬
 	D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc{};
