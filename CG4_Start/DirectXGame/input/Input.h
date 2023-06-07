@@ -3,12 +3,12 @@
 #include <Windows.h>
 #include <wrl.h>
 
-#define DIRECTINPUT_VERSION     0x0800          // DirectInputのバージョン指定
+#define DIRECTINPUT_VERSION     0x0800          //DirectInputのバージョン指定
 #include <dinput.h>
 
-/// <summary>
-/// 入力
-/// </summary>
+///<summary>
+///入力
+///</summary>
 class Input
 {
 public:
@@ -18,76 +18,76 @@ public:
 		LONG    lZ;
 	};
 
-private: // エイリアス
-	// Microsoft::WRL::を省略
+private: //エイリアス
+	//Microsoft::WRL::を省略
 	template <class T> using ComPtr = Microsoft::WRL::ComPtr<T>;
 
-public: // 静的メンバ変数
+public: //静的メンバ変数
 	static Input* GetInstance();
 
-public: // メンバ関数
-	/// <summary>
-	/// 初期化
-	/// </summary>
-	/// <returns>成否</returns>
+public: //メンバ関数
+	///<summary>
+	///初期化
+	///</summary>
+	///<returns>成否</returns>
 	bool Initialize(HINSTANCE hInstance, HWND hwnd);
 
-	/// <summary>
-	/// 毎フレーム処理
-	/// </summary>
+	///<summary>
+	///毎フレーム処理
+	///</summary>
 	void Update();
 
-	/// <summary>
-	/// キーの押下をチェック
-	/// </summary>
-	/// <param name="keyNumber">キー番号( DIK_0 等)</param>
-	/// <returns>押されているか</returns>
+	///<summary>
+	///キーの押下をチェック
+	///</summary>
+	///<param name="keyNumber">キー番号( DIK_0 等)</param>
+	///<returns>押されているか</returns>
 	bool PushKey(BYTE keyNumber);
 
-	/// <summary>
-	/// キーのトリガーをチェック
-	/// </summary>
-	/// <param name="keyNumber">キー番号( DIK_0 等)</param>
-	/// <returns>トリガーか</returns>
+	///<summary>
+	///キーのトリガーをチェック
+	///</summary>
+	///<param name="keyNumber">キー番号( DIK_0 等)</param>
+	///<returns>トリガーか</returns>
 	bool TriggerKey(BYTE keyNumber);
 
-	/// <summary>
-	/// キーの左ボタン押下をチェック
-	/// </summary>
-	/// <returns>押されているか</returns>
+	///<summary>
+	///キーの左ボタン押下をチェック
+	///</summary>
+	///<returns>押されているか</returns>
 	bool PushMouseLeft();
 
-	/// <summary>
-	/// キーの中ボタン押下をチェック
-	/// </summary>
-	/// <returns>押されているか</returns>
+	///<summary>
+	///キーの中ボタン押下をチェック
+	///</summary>
+	///<returns>押されているか</returns>
 	bool PushMouseMiddle();
 
-	/// <summary>
-	/// キーの左ボタントリガーをチェック
-	/// </summary>
-	/// <returns>トリガーか</returns>
+	///<summary>
+	///キーの左ボタントリガーをチェック
+	///</summary>
+	///<returns>トリガーか</returns>
 	bool TriggerMouseLeft();
 
-	/// <summary>
-	/// キーの中ボタントリガーをチェック
-	/// </summary>
-	/// <returns>トリガーか</returns>
+	///<summary>
+	///キーの中ボタントリガーをチェック
+	///</summary>
+	///<returns>トリガーか</returns>
 	bool TriggerMouseMiddle();
 
-	/// <summary>
-	/// マウス移動量を取得
-	/// </summary>
-	/// <returns>マウス移動量</returns>
+	///<summary>
+	///マウス移動量を取得
+	///</summary>
+	///<returns>マウス移動量</returns>
 	MouseMove GetMouseMove();
 
-private: // メンバ関数
+private: //メンバ関数
 	Input() = default;
 	Input(const Input&) = delete;
 	~Input() = default;
 	Input& operator=(const Input&) = delete;
 
-private: // メンバ変数
+private: //メンバ変数
 	ComPtr<IDirectInput8> dinput;
 	ComPtr<IDirectInputDevice8> devKeyboard;
 	BYTE key[256] = {};

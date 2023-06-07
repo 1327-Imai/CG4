@@ -1,5 +1,10 @@
 #include "Model.h"
 
+Model::~Model(){
+	//FBXシーンの解放
+	fbxScene->Destroy();
+}
+
 void Model::Draw(ID3D12GraphicsCommandList* cmdList){
 	//頂点バッファをセット
 	cmdList->IASetVertexBuffers(0 , 1 , &vbView);
@@ -48,7 +53,7 @@ void Model::CreateBuffers(ID3D12Device* device)
 	assert(SUCCEEDED(result));
 
 	//頂点バッファへ転送
-	VertecxPosNormalUv* vertMap = nullptr;
+	VertecxPosNormalUvSkin* vertMap = nullptr;
 	result = vertBuff->Map(0 , nullptr , (void**)&vertMap);
 	if (SUCCEEDED(result)) {
 		std::copy(vertices.begin() , vertices.end() , vertMap);

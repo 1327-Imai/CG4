@@ -1,12 +1,61 @@
 #include "FBX.hlsli"
 
+//スキニング後の頂点法線が入る
+struct SkinOutput {
+	float4 pos;
+	float3 normal;
+};
+
+SkinOutput ComputeSkin(VSInput input) {
+	//ゼロクリア
+	SkinOutput output = (SkinOutput)0;
+
+	uint iBone;
+	float weight;
+	matrix m;
+
+	//ボーン0
+	iBone = input.boneIndices.x;
+	weight = input.boneWeights.x;
+	m = matSkinning[iBone];
+	output.pos += weight * mul(m , input.pos);
+	output.normal += weight * mul((float3x3)m , input.normal);
+
+	//ボーン0
+	iBone = input.boneIndices.y;
+	weight = input.boneWeights.y;
+	m = matSkinning[iBone];
+	output.pos += weight * mul(m , input.pos);
+	output.normal += weight * mul((float3x3)m , input.normal);
+
+	//ボーン0
+	iBone = input.boneIndices.z;
+	weight = input.boneWeights.z;
+	m = matSkinning[iBone];
+	output.pos += weight * mul(m , input.pos);
+	output.normal += weight * mul((float3x3)m , input.normal);
+
+	//ボーン0
+	iBone = input.boneIndices.w;
+	weight = input.boneWeights.w;
+	m = matSkinning[iBone];
+	output.pos += weight * mul(m , input.pos);
+	output.normal += weight * mul((float3x3)m , input.normal);
+
+
+	return output;
+
+}
+
 VSOutput main(VSInput input) {
+	//スキニング計算
+	SkinOutput skinned = ComputeSkin(input);
 	//ワールド行列によるスケーリング、回転を適用
-	float4 wnormal = normalize(mul(matWorld , float4(input.normal , 0)));
+	float4 wnormal = normalize(mul(matWorld , float4(skinned.normal , 0)));
 	//ピクセルシェーダーに渡す値
 	VSOutput output;
 	//行列による座標変換
-	output.svpos = mul(mul(viewProjection , matWorld) , input.pos);
+	output.svpos = mul(mul(viewProjection , matWorld) , skinned.pos);
 	//ワールド法線を次のステージに渡す
 	output.normal = wnormal.xyz;
 	//入力値をそのまま次のステージに渡す
