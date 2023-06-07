@@ -1,5 +1,21 @@
 #include "Model.h"
 
+void Model::Draw(ID3D12GraphicsCommandList* cmdList){
+	//頂点バッファをセット
+	cmdList->IASetVertexBuffers(0 , 1 , &vbView);
+	//インデックスバッファをセット
+	cmdList->IASetIndexBuffer(&ibView);
+	//デスクリプタヒープのセット
+	ID3D12DescriptorHeap* ppHeaps[] = {descHeapSrv.Get()};
+	cmdList->SetDescriptorHeaps(_countof(ppHeaps) , ppHeaps);
+	//シェーダーリソースビューをセット
+	cmdList->SetGraphicsRootDescriptorTable(1 , descHeapSrv->GetGPUDescriptorHandleForHeapStart());
+
+	//描画コマンド
+	cmdList->DrawIndexedInstanced((UINT)indices.size() , 1 , 0 , 0 , 0);
+
+}
+
 void Model::CreateBuffers(ID3D12Device* device)
 {
 
