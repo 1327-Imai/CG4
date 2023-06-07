@@ -36,7 +36,7 @@ void FbxLoader::Finalize() {
 	fbxManager->Destroy();
 }
 
-void FbxLoader::LoadModelFromFile(const string& modelName) {
+Model* FbxLoader::LoadModelFromFile(const string& modelName) {
 
 	//モデルと同じ生のフォルダから読み込む
 	const string directoryPath = baseDirectory + modelName + "/";
@@ -74,6 +74,8 @@ void FbxLoader::LoadModelFromFile(const string& modelName) {
 
 	//バッファ生成
 	model->CreateBuffers(device);
+
+	return model;
 }
 
 void FbxLoader::ParseNodeRecursive(Model* model , FbxNode* fbxNode , Model::Node* parent) {
@@ -120,6 +122,12 @@ void FbxLoader::ParseNodeRecursive(Model* model , FbxNode* fbxNode , Model::Node
 				ParseMesh(model , fbxNode);
 			}
 		}
+	}
+
+	node.gloablTransform = node.transform;
+	if (parent) {
+		node.parent = parent;
+		node.gloablTransform *= parent->gloablTransform;
 	}
 
 	//子ノードに対して再起呼び出し
