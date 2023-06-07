@@ -9,8 +9,13 @@
 #include <DirectXMath.h>
 #include <DirectXTex.h>
 
+#include <fbxsdk.h>
+
 class Model
 {
+public:
+	~Model();
+
 public:
 	//フレンドクラス
 	friend class FbxLoader;
@@ -31,13 +36,19 @@ private://エイリアス
 	//std::を省略
 	using string = std::string;
 	template <class T> using vector = std::vector<T>;
+public://定数
+	//ボーンインデックスの最大数
+	static const int MAX_BONE_INDICES = 4;
+
 
 public://サブクラス
-	struct VertecxPosNormalUv
+	struct VertecxPosNormalUvSkin
 	{
 		DirectX::XMFLOAT3 pos;
 		DirectX::XMFLOAT3 normal;
 		DirectX::XMFLOAT2 uv;
+		UINT boneIndex[MAX_BONE_INDICES];
+		float boneWeight[MAX_BONE_INDICES];
 	};
 
 	//構造体
@@ -60,6 +71,20 @@ public:
 		Node* parent = nullptr;
 	};
 
+	struct Bone {
+		//名前
+		std::string name;
+		//初期姿勢の逆行列
+		DirectX::XMMATRIX invInitialPose;
+		//クラスター
+		FbxCluster* fbxCluster;
+		//コンストラクタ
+		Bone(const std::string& name) {
+			this->name = name;
+		}
+
+	};
+
 	//メンバ関数
 public:
 	void Draw(ID3D12GraphicsCommandList* cmdList);
@@ -68,19 +93,31 @@ public:
 		return meshNode->gloablTransform;
 	}
 
+	vector<Bone>& GetBones() {
+		return bones;
+	}
+
+	FbxScene* GetFbxScene() {
+		return fbxScene;
+	}
+
 private:
 	//バッファ生成
 	void CreateBuffers(ID3D12Device* device);
 
-private:
+private://メンバ変数
+	//FBXシーン
+	FbxScene* fbxScene = nullptr;
 	//モデル名
 	string name;
 	//ノード配列
 	vector<Node> nodes;
+	//ボーン配列
+	vector<Bone> bones;
 	//メッシュを持つノード
 	Node* meshNode = nullptr;
 	//頂点データ配列
-	vector<VertecxPosNormalUv> vertices;
+	vector<VertecxPosNormalUvSkin> vertices;
 	//頂点インデックス配列
 	vector<unsigned short> indices;
 	//アンビエント係数

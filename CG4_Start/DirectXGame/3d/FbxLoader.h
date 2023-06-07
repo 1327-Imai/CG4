@@ -71,6 +71,13 @@ public:
 	//ディレクトリを含んだファイルパスからファイル名を抽出する
 	std::string ExtractFileName(const std::string& path);
 
+	//スキニング情報読み取り
+	void ParseSkin(Model* model , FbxMesh* fbxMesh);
+
+public://静的メンバ関数
+	//FNXの行列をMatirxに変換
+	static void ConvertMatrixFromFbx(DirectX::XMMATRIX* dst , const FbxAMatrix& src);
+
 private://メンバ変数
 	//デバイス
 	ID3D12Device* device = nullptr;
