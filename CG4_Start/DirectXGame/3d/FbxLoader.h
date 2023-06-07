@@ -18,42 +18,42 @@ public://定数
 	static const string baseDirectory;
 
 public:
-	/// <summary>
-	/// シングルトンインスタンスの取得
-	/// </summary>
-	/// <returns>インスタンス</returns>
+	///<summary>
+	///シングルトンインスタンスの取得
+	///</summary>
+	///<returns>インスタンス</returns>
 	static FbxLoader* GetInstance();
 
-	/// <summary>
-	/// 初期化処理
-	/// </summary>
-	/// <param name="device"></param>
+	///<summary>
+	///初期化処理
+	///</summary>
+	///<param name="device"></param>
 	void Initialize(ID3D12Device* device);
 
-	/// <summary>
-	/// 終了処理
-	/// </summary>
+	///<summary>
+	///終了処理
+	///</summary>
 	void Finalize();
 
-	/// <summary>
-	/// ファイルからFBXモデル読み込み
-	/// </summary>
-	/// <param name="modelName"></param>
+	///<summary>
+	///ファイルからFBXモデル読み込み
+	///</summary>
+	///<param name="modelName"></param>
 	Model* LoadModelFromFile(const string& modelName);
 
-	/// <summary>
-	/// 再帰的にノード攻勢を解析
-	/// </summary>
-	/// <param name="model">読み込み先モデルオブジェクト</param>
-	/// <param name="fbxNode">解析対象のノード</param>
-	/// <param name="parent">親ノード</param>
+	///<summary>
+	///再帰的にノード攻勢を解析
+	///</summary>
+	///<param name="model">読み込み先モデルオブジェクト</param>
+	///<param name="fbxNode">解析対象のノード</param>
+	///<param name="parent">親ノード</param>
 	void ParseNodeRecursive(Model* model , FbxNode* fbxNode , Model::Node* parent = nullptr);
 
-	/// <summary>
-	/// メッシュ読み取り
-	/// </summary>
-	/// <param name="model">読み込みモデルオブジェクト</param>
-	/// <param name="fbxNode">解析対象のノード</param>
+	///<summary>
+	///メッシュ読み取り
+	///</summary>
+	///<param name="model">読み込みモデルオブジェクト</param>
+	///<param name="fbxNode">解析対象のノード</param>
 	void ParseMesh(Model* model , FbxNode* fbxNode);
 
 	//頂点座標読み取り
@@ -89,13 +89,13 @@ private://メンバ変数
 	FbxImporter* fbxImporter = nullptr;
 
 private:
-	// privateなコンストラクタ（シングルトンパターン）
+	//privateなコンストラクタ（シングルトンパターン）
 	FbxLoader() = default;
-	// privateなデストラクタ（シングルトンパターン）
+	//privateなデストラクタ（シングルトンパターン）
 	~FbxLoader() = default;
-	// コピーコンストラクタを禁止（シングルトンパターン）
+	//コピーコンストラクタを禁止（シングルトンパターン）
 	FbxLoader(const FbxLoader& obj) = delete;
-	// コピー代入演算子を禁止（シングルトンパターン）
+	//コピー代入演算子を禁止（シングルトンパターン）
 	void operator=(const FbxLoader& obj) = delete;
 
 	//テクスチャがない場合の標準テクスチャファイル名

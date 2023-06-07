@@ -11,68 +11,68 @@
 
 #include "WinApp.h"
 
-/// <summary>
-/// DirectX汎用
-/// </summary>
+///<summary>
+///DirectX汎用
+///</summary>
 class DirectXCommon
 {
-private: // エイリアス
-	// Microsoft::WRL::を省略
+private: //エイリアス
+	//Microsoft::WRL::を省略
 	template <class T> using ComPtr = Microsoft::WRL::ComPtr<T>;
 
-public: // メンバ関数
-	/// <summary>
-	/// デストラクタ
-	/// </summary>
+public: //メンバ関数
+	///<summary>
+	///デストラクタ
+	///</summary>
 	~DirectXCommon();
 
-	/// <summary>
-	/// 初期化
-	/// </summary>
+	///<summary>
+	///初期化
+	///</summary>
 	void Initialize(WinApp* win);
 
-	/// <summary>
-	/// 後始末
-	/// </summary>
+	///<summary>
+	///後始末
+	///</summary>
 	void Finalize();
 
-	/// <summary>
-	/// 描画前処理
-	/// </summary>
+	///<summary>
+	///描画前処理
+	///</summary>
 	void PreDraw();
 
-	/// <summary>
-	/// 描画後処理
-	/// </summary>
+	///<summary>
+	///描画後処理
+	///</summary>
 	void PostDraw();
 
-	/// <summary>
-	/// レンダーターゲットのクリア
-	/// </summary>
+	///<summary>
+	///レンダーターゲットのクリア
+	///</summary>
 	void ClearRenderTarget();
 
-	/// <summary>
-	/// 深度バッファのクリア
-	/// </summary>
+	///<summary>
+	///深度バッファのクリア
+	///</summary>
 	void ClearDepthBuffer();
 
-	/// <summary>
-	/// デバイスの取得
-	/// </summary>
-	/// <returns>デバイス</returns>
+	///<summary>
+	///デバイスの取得
+	///</summary>
+	///<returns>デバイス</returns>
 	ID3D12Device* GetDevice() { return device.Get(); }
 
-	/// <summary>
-	/// 描画コマンドリストの取得
-	/// </summary>
-	/// <returns>描画コマンドリスト</returns>
+	///<summary>
+	///描画コマンドリストの取得
+	///</summary>
+	///<returns>描画コマンドリスト</returns>
 	ID3D12GraphicsCommandList* GetCommandList() { return commandList.Get(); }
 
-private: // メンバ変数
-	// ウィンドウズアプリケーション管理
+private: //メンバ変数
+	//ウィンドウズアプリケーション管理
 	WinApp* winApp;
 
-	// Direct3D関連
+	//Direct3D関連
 	ComPtr<IDXGIFactory6> dxgiFactory;
 	ComPtr<ID3D12Device> device;
 	ComPtr<ID3D12GraphicsCommandList> commandList;
@@ -92,47 +92,47 @@ private: // メンバ変数
 	float commandWaitTime = 0.0f;
 	std::chrono::steady_clock::time_point lastUpdate;
 
-private: // メンバ関数
-	/// <summary>
-	/// DXGIデバイス初期化
-	/// </summary>
-	/// <returns>成否</returns>
+private: //メンバ関数
+	///<summary>
+	///DXGIデバイス初期化
+	///</summary>
+	///<returns>成否</returns>
 	bool InitializeDXGIDevice();
 
-	/// <summary>
-	/// スワップチェーンの生成
-	/// </summary>
-	/// <returns>成否</returns>
+	///<summary>
+	///スワップチェーンの生成
+	///</summary>
+	///<returns>成否</returns>
 	bool CreateSwapChain();
 
-	/// <summary>
-	/// コマンド関連初期化
-	/// </summary>
-	/// <returns>成否</returns>
+	///<summary>
+	///コマンド関連初期化
+	///</summary>
+	///<returns>成否</returns>
 	bool InitializeCommand();
 
-	/// <summary>
-	/// レンダーターゲット生成
-	/// </summary>
-	/// <returns>成否</returns>
+	///<summary>
+	///レンダーターゲット生成
+	///</summary>
+	///<returns>成否</returns>
 	bool CreateFinalRenderTargets();
 
-	/// <summary>
-	/// 深度バッファ生成
-	/// </summary>
-	/// <returns>成否</returns>
+	///<summary>
+	///深度バッファ生成
+	///</summary>
+	///<returns>成否</returns>
 	bool CreateDepthBuffer();
 
-	/// <summary>
-	/// フェンス生成
-	/// </summary>
-	/// <returns>成否</returns>
+	///<summary>
+	///フェンス生成
+	///</summary>
+	///<returns>成否</returns>
 	bool CreateFence();	
 
-	/// <summary>
-	/// imgui初期化
-	/// </summary>
-	/// <returns>成否</returns>
+	///<summary>
+	///imgui初期化
+	///</summary>
+	///<returns>成否</returns>
 	bool InitImgui();
 };
 

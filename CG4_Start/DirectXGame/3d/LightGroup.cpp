@@ -3,17 +3,17 @@
 
 using namespace DirectX;
 
-/// <summary>
-/// 静的メンバ変数の実体
-/// </summary>
+///<summary>
+///静的メンバ変数の実体
+///</summary>
 ID3D12Device* LightGroup::device = nullptr;
 
 void LightGroup::StaticInitialize(ID3D12Device * device)
 {
-	// 再初期化チェック
+	//再初期化チェック
 	assert(!LightGroup::device);
 
-	// nullptrチェック
+	//nullptrチェック
 	assert(device);
 
 	LightGroup::device = device;
@@ -21,10 +21,10 @@ void LightGroup::StaticInitialize(ID3D12Device * device)
 
 LightGroup * LightGroup::Create()
 {
-	// 3Dオブジェクトのインスタンスを生成
+	//3Dオブジェクトのインスタンスを生成
 	LightGroup* instance = new LightGroup();
 
-	// 初期化
+	//初期化
 	instance->Initialize();
 
 	return instance;
@@ -32,15 +32,15 @@ LightGroup * LightGroup::Create()
 
 void LightGroup::Initialize()
 {
-	// nullptrチェック
+	//nullptrチェック
 	assert(device);
 
 	DefaultLightSetting();
 
 	HRESULT result;
-	// 定数バッファの生成
+	//定数バッファの生成
 	result = device->CreateCommittedResource(
-		&CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD), 	// アップロード可能
+		&CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD), 	//アップロード可能
 		D3D12_HEAP_FLAG_NONE,
 		&CD3DX12_RESOURCE_DESC::Buffer((sizeof(ConstBufferData) + 0xff)&~0xff),
 		D3D12_RESOURCE_STATE_GENERIC_READ,
@@ -50,13 +50,13 @@ void LightGroup::Initialize()
 		assert(0);
 	}
 
-	// 定数バッファへデータ転送
+	//定数バッファへデータ転送
 	TransferConstBuffer();
 }
 
 void LightGroup::Update()
 {
-	// 値の更新があった時だけ定数バッファに転送する
+	//値の更新があった時だけ定数バッファに転送する
 	if (dirty) {
 		TransferConstBuffer();
 		dirty = false;
@@ -65,49 +65,49 @@ void LightGroup::Update()
 
 void LightGroup::Draw(ID3D12GraphicsCommandList * cmdList, UINT rootParameterIndex)
 {
-	// 定数バッファビューをセット
+	//定数バッファビューをセット
 	cmdList->SetGraphicsRootConstantBufferView(rootParameterIndex, constBuff->GetGPUVirtualAddress());
 }
 
 void LightGroup::TransferConstBuffer()
 {
 	HRESULT result;
-	// 定数バッファへデータ転送
+	//定数バッファへデータ転送
 	ConstBufferData* constMap = nullptr;
 	result = constBuff->Map(0, nullptr, (void**)&constMap);
 	if (SUCCEEDED(result)) {
-		// 環境光
+		//環境光
 		constMap->ambientColor = ambientColor;
-		// 平行光源
+		//平行光源
 		for (int i = 0; i < DirLightNum; i++) {
-			// ライトが有効なら設定を転送
+			//ライトが有効なら設定を転送
 			if (dirLights[i].IsActive()) {
 				constMap->dirLights[i].active = 1;
 				constMap->dirLights[i].lightv = -dirLights[i].GetLightDir();
 				constMap->dirLights[i].lightcolor = dirLights[i].GetLightColor();
 			}
-			// ライトが無効ならライト色を0に
+			//ライトが無効ならライト色を0に
 			else {
 				constMap->dirLights[i].active = 0;
 			}
 		}
-		// 点光源
+		//点光源
 		for (int i = 0; i < PointLightNum; i++) {
-			// ライトが有効なら設定を転送
+			//ライトが有効なら設定を転送
 			if (pointLights[i].IsActive()) {
 				constMap->pointLights[i].active = 1;
 				constMap->pointLights[i].lightpos = pointLights[i].GetLightPos();
 				constMap->pointLights[i].lightcolor = pointLights[i].GetLightColor();
 				constMap->pointLights[i].lightatten = pointLights[i].GetLightAtten();
 			}
-			// ライトが無効ならライト色を0に
+			//ライトが無効ならライト色を0に
 			else {
 				constMap->pointLights[i].active = 0;
 			}
 		}
-		// スポットライト
+		//スポットライト
 		for (int i = 0; i < SpotLightNum; i++) {
-			// ライトが有効なら設定を転送
+			//ライトが有効なら設定を転送
 			if (spotLights[i].IsActive()) {
 				constMap->spotLights[i].active = 1;
 				constMap->spotLights[i].lightv = -spotLights[i].GetLightDir();
@@ -116,14 +116,14 @@ void LightGroup::TransferConstBuffer()
 				constMap->spotLights[i].lightatten = spotLights[i].GetLightAtten();
 				constMap->spotLights[i].lightfactoranglecos = spotLights[i].GetLightFactorAngleCos();
 			}
-			// ライトが無効ならライト色を0に
+			//ライトが無効ならライト色を0に
 			else {
 				constMap->spotLights[i].active = 0;
 			}
 		}
-		// 丸影
+		//丸影
 		for (int i = 0; i < CircleShadowNum; i++) {
-			// 有効なら設定を転送
+			//有効なら設定を転送
 			if (circleShadows[i].IsActive()) {
 				constMap->circleShadows[i].active = 1;
 				constMap->circleShadows[i].dir = -circleShadows[i].GetDir();
@@ -132,7 +132,7 @@ void LightGroup::TransferConstBuffer()
 				constMap->circleShadows[i].atten = circleShadows[i].GetAtten();
 				constMap->circleShadows[i].factorAngleCos = circleShadows[i].GetFactorAngleCos();
 			}
-			// 無効なら色を0に
+			//無効なら色を0に
 			else {
 				constMap->circleShadows[i].active = 0;
 			}

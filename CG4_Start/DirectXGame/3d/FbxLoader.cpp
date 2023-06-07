@@ -454,7 +454,7 @@ void FbxLoader::ParseSkin(Model* model , FbxMesh* fbxMesh){
 void FbxLoader::ConvertMatrixFromFbx(DirectX::XMMATRIX* dst , const FbxAMatrix& src){
 	for (int i = 0; i < 4; i++) {
 		for (int j = 0; j < 4; j++) {
-			dst->r[1].m128_f32[j] = (float)src.Get(i , j);
+			dst->r[i].m128_f32[j] = (float)src.Get(i , j);
 		}
 	}
 }
