@@ -61,11 +61,6 @@ public://メンバ関数
 
 	void Draw(ID3D12GraphicsCommandList* cmdList);
 
-	//アクセッサ
-	void SetModel(Model* model) {
-		this->model = model;
-	}
-
 	//アニメーション開始
 	void PlayAnimation();
 
@@ -74,6 +69,15 @@ public://メンバ関数
 
 	//アニメーション再生状況切り替え
 	void ToggleAnimation();
+
+	//アクセッサ
+	void SetModel(Model* model) {
+		this->model = model;
+	}
+
+	void SetRotation(XMFLOAT3 rotation) {
+		this->rotation = rotation;
+	}
 
 protected://メンバ変数
 	ComPtr<ID3D12Resource> constBufferTransform;
