@@ -43,7 +43,7 @@ public://サブクラス
 
 public://静的メンバ関数
 	//セッター
-	static void SetDeivce(ID3D12Device* device){
+	static void SetDeivce(ID3D12Device* device) {
 		Object3d::device = device;
 	}
 	static void SetCamera(Camera* camera) {
@@ -66,6 +66,15 @@ public://メンバ関数
 		this->model = model;
 	}
 
+	//アニメーション開始
+	void PlayAnimation();
+
+	//アニメーション停止
+	void StopAnimation();
+
+	//アニメーション再生状況切り替え
+	void ToggleAnimation();
+
 protected://メンバ変数
 	ComPtr<ID3D12Resource> constBufferTransform;
 	ComPtr<ID3D12Resource> constBufferSkin;
@@ -76,6 +85,18 @@ protected://メンバ変数
 	XMMATRIX matWorld;
 
 	Model* model = nullptr;
+
+	//FBXアニメーション用変数
+	//1フレームの時間
+	FbxTime frameTime;
+	//アニメーション開始時間
+	FbxTime startTime;
+	//アニメーション終了時間
+	FbxTime endTime;
+	//現在時間(アニメーション)
+	FbxTime currentTime;
+	//アニメーション再生フラグ
+	bool isPlay = false;
 
 private://静的メンバ変数
 	static ID3D12Device* device;
