@@ -340,6 +340,14 @@ void FbxLoader::ParseSkin(Model* model , FbxMesh* fbxMesh){
 
 	//スキニング情報がなければ終了
 	if (fbxSkin == nullptr) {
+
+		//各頂点について処理
+		for (int i = 0; i < model->vertices.size(); i++) {
+			//最初のボーンの影響100%にする
+			model->vertices[i].boneIndex[0] = 0;
+			model->vertices[i].boneWeight[0] = 1.0f;
+		}
+
 		return;
 	}
 

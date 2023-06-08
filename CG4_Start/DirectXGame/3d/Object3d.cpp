@@ -32,6 +32,18 @@ void Object3d::Initialize() {
 		nullptr ,
 		IID_PPV_ARGS(&constBufferSkin)
 	);
+
+	//定数バッファへデータ転送
+	ConstBufferDataSkin* constMapSkin = nullptr;
+	result = constBufferSkin->Map(0 , nullptr , (void**)&constMapSkin);
+	for (int i = 0; i < MAX_BONES; i++) {
+		constMapSkin->bones[i] = XMMatrixIdentity();
+	}
+	constBufferSkin->Unmap(0 , nullptr);
+
+	//1フレーム分の時間を60FPSで設定
+	frameTime.SetTime(0 , 0 , 0 , 1 , 0 , FbxTime::EMode::eFrames60);
+
 }
 
 void Object3d::Update() {
@@ -50,6 +62,15 @@ void Object3d::Update() {
 	matWorld *= matScale;
 	matWorld *= matRot;
 	matWorld *= matTrans;
+
+	if (isPlay) {
+		//1フレーム進める
+		currentTime += frameTime;
+		//最後まで再生したら先頭に戻す
+		if (currentTime > endTime) {
+			currentTime = startTime;
+		}
+	}
 
 	//ビュープロジェクション行列
 	const XMMATRIX& matViewProjection = camera->GetViewProjectionMatrix();
@@ -81,7 +102,7 @@ void Object3d::Update() {
 		XMMATRIX matCurrentPose;
 		//今の姿勢行列を取得
 		FbxAMatrix fbxCurrentPose =
-			bones[i].fbxCluster->GetLink()->EvaluateGlobalTransform(0);
+			bones[i].fbxCluster->GetLink()->EvaluateGlobalTransform(currentTime);
 		//XMMATRIXに変換
 		FbxLoader::ConvertMatrixFromFbx(&matCurrentPose , fbxCurrentPose);
 		//合成してスキニング行列に
@@ -108,6 +129,51 @@ void Object3d::Draw(ID3D12GraphicsCommandList* cmdList) {
 
 	//モデル描画
 	model->Draw(cmdList);
+
+}
+
+void Object3d::PlayAnimation() {
+	FbxScene* fbxScene = model->GetFbxScene();
+	//0番のアニメーション再生
+	FbxAnimStack* animstack = fbxScene->GetSrcObject<FbxAnimStack>(0);
+	//アニメーションの名前取得
+	const char* animstackname = animstack->GetName();
+	//アニメーションの時間情報
+	FbxTakeInfo* takeInfo = fbxScene->GetTakeInfo(animstackname);
+
+	//開始時間取得
+	startTime = takeInfo->mLocalTimeSpan.GetStart();
+	//終了時間取得
+	endTime = takeInfo->mLocalTimeSpan.GetStop();
+	//開始時間に合わせる
+	currentTime = startTime;
+	//再生中状態にする
+	isPlay = true;
+}
+
+//アニメーション停止
+void Object3d::StopAnimation() {
+
+	//開始時間初期化
+	startTime = 0;
+	//終了時間初期化
+	endTime = 0;
+	//現在時間初期化
+	currentTime = 0;
+	//再生停止する
+	isPlay = false;
+
+}
+
+//アニメーション再生状況切り替え
+void Object3d::ToggleAnimation() {
+
+	if (isPlay == false) {
+		PlayAnimation();
+	}
+	else {
+		StopAnimation();
+	}
 
 }
 

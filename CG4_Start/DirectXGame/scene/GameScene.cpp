@@ -66,9 +66,12 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input, Audio * audio)
 	lightGroup = LightGroup::Create();
 
 	//カメラ注視点をセット
+	//camera->SetTarget({0 , 20.0f , 0});
+	//camera->SetDistance(100.0f);
 	camera->SetTarget({0, 2.0f, 0});
 	camera->SetDistance(10.0f);
 
+	//model1 = FbxLoader::GetInstance()->LoadModelFromFile("cube");
 	model1 = FbxLoader::GetInstance()->LoadModelFromFile("boneTest");
 
 	object1 = new Object3d;
@@ -79,6 +82,10 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input, Audio * audio)
 
 void GameScene::Update()
 {
+	if (input->TriggerKey(DIK_SPACE)) {
+		object1->ToggleAnimation();
+	}
+
 	lightGroup->Update();
 	camera->Update();
 	particleMan->Update();
