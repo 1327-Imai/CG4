@@ -25,9 +25,6 @@ PostEffect::PostEffect() : Sprite(
 void PostEffect::Initialize() {
 	HRESULT result;
 
-	////基底クラスとしての初期化
-	//Sprite::Initialize();
-
 	//頂点バッファの生成
 	result = device->CreateCommittedResource(
 		&CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD) ,
@@ -40,10 +37,10 @@ void PostEffect::Initialize() {
 	assert(SUCCEEDED(result));
 
 	VertexPosUv vertices[vertNum] = {
-		{{-1.0f , -1.0f , 0.0f} , {0.0f , 1.0f}} ,
-		{{-1.0f , +1.0f , 0.0f} , {0.0f , 0.0f}} ,
-		{{+1.0f , -1.0f , 0.0f} , {1.0f , 1.0f}} ,
-		{{+1.0f , +1.0f , 0.0f} , {1.0f , 0.0f}} ,
+		{{-0.5f , -0.5f , 0.0f} , {0.0f , 1.0f}} ,
+		{{-0.5f , +0.5f , 0.0f} , {0.0f , 0.0f}} ,
+		{{+0.5f , -0.5f , 0.0f} , {1.0f , 1.0f}} ,
+		{{+0.5f , +0.5f , 0.0f} , {1.0f , 0.0f}} ,
 	};
 
 	VertexPosUv* vertMap = nullptr;
@@ -84,26 +81,6 @@ void PostEffect::Initialize() {
 		IID_PPV_ARGS(&texBuff)
 	);
 	assert(SUCCEEDED(result));
-
-	//{//テクスチャを赤クリア
-	//	//画素数(1,280 x 720 = 921,600ピクセル)
-	//	const UINT pixelCount = WinApp::window_width * WinApp::window_height;
-	//	//画像1行分のデータサイズ
-	//	const UINT rowPitch = sizeof(UINT) * WinApp::window_width;
-	//	//画像全体のデータサイズ
-	//	const UINT depthPitch = rowPitch * WinApp::window_height;
-	//	//画像イメージ
-	//	UINT* img = new UINT[pixelCount];
-	//	for (int i = 0; i < pixelCount; i++) {
-	//		img[i] = 0xff0000ff;
-	//	}
-
-	//	//テクスチャバッファにデータ転送
-	//	result = texBuff->WriteToSubresource(
-	//		0 , nullptr , img , rowPitch , depthPitch);
-	//	assert(SUCCEEDED(result));
-	//	delete[] img;
-	//}
 
 	//SRV用デスクリプタヒープ設定
 	D3D12_DESCRIPTOR_HEAP_DESC srvDescHeapDesc = {};
