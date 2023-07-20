@@ -83,14 +83,14 @@ int WINAPI WinMain(HINSTANCE,HINSTANCE,LPSTR,int)
 		gameScene->Draw();
 		postEffect1->PostDrawScene(dxCommon->GetCommandList());
 
-		postEffect2->PreDrawScene(dxCommon->GetCommandList());
-		postEffect1->Draw(dxCommon->GetCommandList());
-		postEffect2->PostDrawScene(dxCommon->GetCommandList());
+		//postEffect2->PreDrawScene(dxCommon->GetCommandList());
+		//postEffect1->Draw(dxCommon->GetCommandList());
+		//postEffect2->PostDrawScene(dxCommon->GetCommandList());
 		
 		//描画開始
 		dxCommon->PreDraw();
 		//ポストエフェクトの描画
-		postEffect2->Draw(dxCommon->GetCommandList());
+		postEffect1->Draw(dxCommon->GetCommandList());
 		//描画終了
 		dxCommon->PostDraw();
 	}
