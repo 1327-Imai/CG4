@@ -5,8 +5,15 @@ Texture2D<float4> tex : register(t0);
 //0番スロットに設定されたサンプラー
 SamplerState smp : register(s0);
 
+struct PSOutput {
+	float4 target0 : SV_TARGET0;
+	float4 target1 : SV_TARGET1;
+};
+
 //エントリーポイント
-float4 main(VSOutput input) : SV_TARGET{
+PSOutput main(VSOutput input){
+	PSOutput output;
+
 	//テクスチャマッピング
 	float4 texcolor = tex.Sample(smp , input.uv);
 	//Lambert反射
@@ -15,6 +22,9 @@ float4 main(VSOutput input) : SV_TARGET{
 	float brightness = diffuse + 0.3f;
 	float4 shadecolor = float4(brightness , brightness , brightness , 1.0f);
 
-	return shadecolor * texcolor;
+	output.target0 = shadecolor * texcolor;
+	output.target1 = float4(1 - (shadecolor * texcolor).rgb , 1);
+
+	return output;
 
 }
